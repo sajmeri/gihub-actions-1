@@ -1,5 +1,9 @@
 name: Main
-on:
-  push:
+on: push
+jobs:
+  lint:
     runs-on: ubuntu-latest
-    run: echo "daploying"
+    steps:
+      - name: Lint
+        run: echo "Linting"
+        run: npm lint
