@@ -1,9 +1,9 @@
-name: Main
+name: Test
 on: push
 jobs:
-  lint:
+  test:
     runs-on: ubuntu-latest
-     steps:
+    steps:
       - name: Get code
         uses: actions/checkout@v3
       - name: Install NodeJS
@@ -12,5 +12,5 @@ jobs:
           node-version: 18
       - name: Install dependencies
         run: npm ci
-      - name: Run Lint
-        run: npm lint
+      - name: Run tests
+        run: npm test
