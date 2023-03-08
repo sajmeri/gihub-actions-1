@@ -47,8 +47,8 @@ jobs:
         run: npm run build
       # artifacts are files and folders that get created by the build process, e.g all the files under dist folder, you want to deploy these files to a server.
       # upload artifacts provides you with a way to download these files to be used in next steps
-      - name: Upload artifacts 
+      - name: Upload artifacts
         uses: actions/upload-artifacts@v3
-          with:
-            name: dist-files
-            path: dist
+        with:
+          name: dist-files
+          path: dist
