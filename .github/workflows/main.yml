@@ -6,10 +6,6 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v3
-      - name: Install NodeJS
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
       - name: Cache dependencies # this step helps cache the dependencies in package-lock.json for subsequent steps saving build time across all builds and steps, the cache is invalidated if pacakge-lock changes
         uses: actions/cache@v3
         with:
@@ -25,10 +21,6 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v3
-      - name: Install NodeJS
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
       - name: Cache dependencies
         uses: actions/cache@v3
         with:
@@ -44,10 +36,6 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v3
-      - name: Install NodeJS
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
       - name: Cache dependencies
         uses: actions/cache@v3
         with:
