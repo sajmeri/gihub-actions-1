@@ -1,77 +1,81 @@
 name: Lint Test Build and Deploy
 on: push
-env: #example of an env variable that is common to all jobs
-  NODE_ENV: ${{ secrets.QA_NODE_ENV }} #secrets key/value pairs can be added to each repository via settings - secrets and then those vars can be used here to avoid exposing your value to the world when hardcoded in code
+env: #example of an env variable that is common to all jobs and exists in ENVIRONMENT in github
+
 jobs:
-  lint:
-    env:
-      STAGE: lint #example of an env variable that is job specific
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get code
-        uses: actions/checkout@v3
-      - name: Cache dependencies # this step helps cache the dependencies in package-lock.json for subsequent steps saving build time across all builds and steps, the cache is invalidated if pacakge-lock changes
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
-      - name: Install dependencies
-        run: npm ci
-      - name: Run lint
-        run: npm run lint
-      - name: Output STAGE ENV value
-        run: echo ${{ secrets.LINT_STAGE }} #example of an using environment variable in a task
-  test:
-    needs: lint
-    env:
-      STAGE: test #example of an env variable that is job specific
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get code
-        uses: actions/checkout@v3
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
-      - name: Install dependencies
-        run: npm ci
-      - name: Run tests
-        run: npm test
-      - name: Out STAGE ENV value alternatively
-        run: echo  ${{ secrets.TEST_STAGE }} # another example of an using environment variable in a task
-  build:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get code
-        uses: actions/checkout@v3
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
-      - name: Install dependencies
-        run: npm ci
-      - name: Run build
-        run: npm run build
-      # artifacts are files and folders that get created by the build process, e.g all the files under dist folder, you want to deploy these files to a server.
-      # upload artifacts provides you with a way to download these files to be used in next steps
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: dist-files
-          path: dist
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      #artifacts uploaded in the build step can be downloaded here and deployed wherever needed
-      - name: Get Build artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: dist-files
-      - name: Output artifacts
-        run: ls
-      - name: Deploy
-        run: echo "Deploying..."
+  testing:
+    #secrets key/value pairs can be added to each repository via settings - secrets can be used here to avoid exposing your values to the world when hardcoded in code
+    enviromnent: #environment specific secrets can be stored in settings/Environments
+      NODE_ENV: ${{ secrets.NODE_ENV }}
+    lint:
+      env:
+        STAGE: lint #example of an env variable that is job specific and exists in repository secrets in github
+      runs-on: ubuntu-latest
+      steps:
+        - name: Get code
+          uses: actions/checkout@v3
+        - name: Cache dependencies # this step helps cache the dependencies in package-lock.json for subsequent steps saving build time across all builds and steps, the cache is invalidated if pacakge-lock changes
+          uses: actions/cache@v3
+          with:
+            path: ~/.npm
+            key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+        - name: Install dependencies
+          run: npm ci
+        - name: Run lint
+          run: npm run lint
+        - name: Output STAGE ENV value
+          run: echo ${{ secrets.LINT_STAGE }} #example of an using environment variable in a task, since this is a secret var the output in github for this will be hidden and shown aa ***
+    test:
+      needs: lint
+      env:
+        STAGE: test #example of an env variable that is job specific and exists in repository secrets
+      runs-on: ubuntu-latest
+      steps:
+        - name: Get code
+          uses: actions/checkout@v3
+        - name: Cache dependencies
+          uses: actions/cache@v3
+          with:
+            path: ~/.npm
+            key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+        - name: Install dependencies
+          run: npm ci
+        - name: Run tests
+          run: npm test
+        - name: Out STAGE ENV value alternatively
+          run: echo  ${{ secrets.TEST_STAGE }} # another example of an using environment variable in a task, since this is a secret var the output in github for this will be hidden and shown aa ***
+    build:
+      needs: test
+      runs-on: ubuntu-latest
+      steps:
+        - name: Get code
+          uses: actions/checkout@v3
+        - name: Cache dependencies
+          uses: actions/cache@v3
+          with:
+            path: ~/.npm
+            key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+        - name: Install dependencies
+          run: npm ci
+        - name: Run build
+          run: npm run build
+        # artifacts are files and folders that get created by the build process, e.g all the files under dist folder, you want to deploy these files to a server.
+        # upload artifacts provides you with a way to download these files to be used in next steps
+        - name: Upload artifacts
+          uses: actions/upload-artifact@v3
+          with:
+            name: dist-files
+            path: dist
+    deploy:
+      needs: build
+      runs-on: ubuntu-latest
+      steps:
+        #artifacts uploaded in the build step can be downloaded here and deployed wherever needed
+        - name: Get Build artifacts
+          uses: actions/download-artifact@v3
+          with:
+            name: dist-files
+        - name: Output artifacts
+          run: ls
+        - name: Deploy
+          run: echo "Deploying..."
