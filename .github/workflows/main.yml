@@ -21,7 +21,7 @@ jobs:
       - name: Run lint
         run: npm run lint
       - name: Output STAGE ENV value
-        run: echo ${{ secrets.NODE_ENV }} #example of an using environment variable in a task, since this is a secret var the output in github for this will be hidden and shown aa ***
+        run: echo ${{ secrets.NODE_ENV }} - ${{ secrets.LINT_STAGE }} #example of an using environment variable in a task, since this is a secret var the output in github for this will be hidden and shown aa ***
   test:
     needs: lint
     env:
