@@ -52,3 +52,16 @@ jobs:
         with:
           name: dist-files
           path: dist
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      #artifacts uploaded in the build step can be downloaded here and deployed wherever needed
+      - name: Get Build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: dist-files
+      - name: Output artifacts
+        run: ls
+      - name: Deploy
+        run: echo "Deploying..."
