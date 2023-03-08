@@ -19,11 +19,12 @@ jobs:
         run: npm ci
       - name: Run lint
         run: npm run lint
-      - name: Output STAGE ENV value 
+      - name: Output STAGE ENV value
         run: echo $STAGE #example of an using environment variable in a task
-        run: echo ${{ env.NODE_ENV }} # another example of an using environment variable in a task
   test:
     needs: lint
+    env:
+      STAGE: test #example of an env variable that is job specific
     runs-on: ubuntu-latest
     steps:
       - name: Get code
@@ -37,6 +38,8 @@ jobs:
         run: npm ci
       - name: Run tests
         run: npm test
+      - name: Out STAGE ENV value alternatively
+        run: echo ${{ env.NODE_ENV }} # another example of an using environment variable in a task
   build:
     needs: test
     runs-on: ubuntu-latest
