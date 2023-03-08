@@ -1,7 +1,7 @@
 name: Lint Test Build and Deploy
 on: push
 env: #example of an env variable that is common to all jobs
-  NODE_ENV: QA
+  NODE_ENV: ${{ secrets.QA_NODE_ENV }} #secrets key/value pairs can be added to each repository via settings - secrets and then those vars can be used here to avoid exposing your value to the world when hardcoded in code
 jobs:
   lint:
     env:
@@ -20,7 +20,7 @@ jobs:
       - name: Run lint
         run: npm run lint
       - name: Output STAGE ENV value
-        run: echo $STAGE #example of an using environment variable in a task
+        run: echo ${{ secrets.LINT_STAGE }} #example of an using environment variable in a task
   test:
     needs: lint
     env:
@@ -39,7 +39,7 @@ jobs:
       - name: Run tests
         run: npm test
       - name: Out STAGE ENV value alternatively
-        run: echo ${{ env.NODE_ENV }} # another example of an using environment variable in a task
+        run: echo  ${{ secrets.TEST_STAGE }} # another example of an using environment variable in a task
   build:
     needs: test
     runs-on: ubuntu-latest
