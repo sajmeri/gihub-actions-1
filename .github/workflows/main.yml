@@ -5,7 +5,7 @@ jobs:
     #secrets key/value pairs can be added to each repository via settings - secrets can be used here to avoid exposing your values to the world when hardcoded in code
     environment: testing #environment specific secrets can be stored in settings/Environments
     env:
-      NODE_ENV: ${{ secrets.NODE_ENVI }} #example of an env variable that is environment specific and exists in Environments secrets in github
+      NODE_ENV: ${{ secrets.NODE_ENV }} #example of an env variable that is environment specific and exists in Environments secrets in github
       STAGE: ${{ secrets.LINT_STAGE }} #example of an env variable that exists in repository secrets in github
     runs-on: ubuntu-latest
     steps:
@@ -21,7 +21,7 @@ jobs:
       - name: Run lint
         run: npm run lint
       - name: Output STAGE ENV value
-        run: echo ${{ secrets.NODE_ENVI }} #example of an using environment variable in a task, since this is a secret var the output in github for this will be hidden and shown aa ***
+        run: echo ${{ secrets.NODE_ENV }} #example of an using environment variable in a task, since this is a secret var the output in github for this will be hidden and shown aa ***
   test:
     needs: lint
     env:
