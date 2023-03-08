@@ -10,6 +10,7 @@ function App() {
         </div>
         <h1>Learn & Master GitHub Actions</h1>
       </header>
+      <h2>Example of an environment variable - {process.env.NODE_ENV}</h2>
       <MainContent />
     </>
   );

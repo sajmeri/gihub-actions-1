@@ -1,7 +1,11 @@
 name: Lint Test Build and Deploy
 on: push
+env: #example of an env variable that is common to all jobs
+  NODE_ENV: QA
 jobs:
   lint:
+    env:
+      STAGE: lint #example of an env variable that is job specific
     runs-on: ubuntu-latest
     steps:
       - name: Get code
@@ -15,6 +19,9 @@ jobs:
         run: npm ci
       - name: Run lint
         run: npm run lint
+      - name: Output STAGE ENV value 
+        run: echo $STAGE #example of an using environment variable in a task
+        run: echo ${{ env.NODE_ENV }} # another example of an using environment variable in a task
   test:
     needs: lint
     runs-on: ubuntu-latest
