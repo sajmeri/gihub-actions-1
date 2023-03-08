@@ -1,4 +1,4 @@
-name: Lint Test and Deploy
+name: Lint Test Build and Deploy
 on: push
 jobs:
   lint:
@@ -45,3 +45,10 @@ jobs:
         run: npm ci
       - name: Run build
         run: npm run build
+      # artifacts are files and folders that get created by the build process, e.g all the files under dist folder, you want to deploy these files to a server.
+      # upload artifacts provides you with a way to download these files to be used in next steps
+      - name: Upload artifacts 
+        uses: actions/upload-artifacts@v3
+          with:
+            name: dist-files
+            path: dist
